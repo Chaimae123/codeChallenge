@@ -1,0 +1,49 @@
+visualization-component:not(.oj-complete){
+  visibility: hidden;
+}
+
+visualization-component{
+	min-height: 50px;
+	width: 100%;
+}
+
+#form-container{
+	padding: 20px;
+	width: 100%;
+	display: flex;
+}
+
+#form-container .oj-form{
+	width: 100%;
+	display: flex;
+}
+
+#input-field{
+	width: 35vw;
+	border-radius: 4px;
+	border: 1px solid #9E9E9E;
+	margin-right: 10px;
+}
+
+#myButton .oj-button-button{
+	min-width: 100px;
+	height: 39px;
+	border-radius: 4px;
+	background-color: #00BCD4;
+	border: 1px solid #00BCD4;
+	color: #ffffff;
+}
+
+#myButton .oj-text-field-container{
+	height: 40px;
+}
+
+.conatiner-display {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.settings-div {
+	width: 30%;
+}

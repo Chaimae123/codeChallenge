@@ -1,0 +1,181 @@
+<!--
+  Copyright (c) 2015, 2019, Oracle and/or its affiliates.
+  The Universal Permissive License (UPL), Version 1.0
+-->
+<oj-form-layout id="form-container">
+    <oj-input-text value="{{dataSet}}" type="text" on- placeholder="  Enter your data set here..." id="input-field"></oj-input-text>
+    <oj-button id="myButton1" on-oj-action="[[(event) => submitDataClick(event, 'bar')]]">
+        <span>Bar Chart</span>
+    </oj-button>
+    <oj-button id="myButton2" on-oj-action="[[(event) => submitDataClick(event, 'area')]]">
+        <span>Area Chart</span>
+    </oj-button>
+    <oj-button id="myButton3" on-oj-action="[[(event) => submitDataClick(event, 'pie')]]">
+        <span>Pie Chart</span>
+    </oj-button>
+    <oj-button id="myButton4" on-oj-action="[[(event) => submitDataClick(event, 'boxPlot')]]">
+        <span>Box Plot</span>
+    </oj-button>
+    <oj-button id="myButton5" on-oj-action="[[(event) => submitDataClick(event, 'scatter')]]">
+        <span>Scatter Plot</span>
+    </oj-button>
+</oj-form-layout>
+
+<!-- Bar/Area/Pie charts-->
+<oj-bind-if test="[[chartType() == 'pie' || chartType() == 'bar' || chartType() == 'area']]">
+    <div id='chart-container' class="conatiner-display">
+    <div style="width:40%">
+    <oj-chart id="chartID"
+              type="[[chartType]]"
+              orientation="[[orientationValue]]"
+              stack="[[stackValue]]"
+              data="[[dataProvider]]"
+              animation-on-display="auto"
+              animation-on-data-change="auto"
+              hover-behavior="dim"
+              style-defaults.three-d-effect="[[threeDValue]]"
+              style="max-width:500px;width:100%;height:350px;">
+        <template slot="itemTemplate" data-oj-as="item">
+            <oj-chart-item
+                    value='[[item.data.value]]'
+                    group-id='[[[item.data.group]]]'
+                    series-id='[[item.data.series]]'>
+            </oj-chart-item>
+        </template>
+        <template slot='seriesTemplate' id="test" data-oj-as='series'>
+            <oj-chart-series
+                    color='[[ series.id == selectVal() ? color : null ]]'
+                    border-color='[[ series.id == selectVal() ? borderColor : null ]]'>
+            </oj-chart-series>
+        </template>
+    </oj-chart>
+    <oj-toolbar id="myToolbar" aria-label="Chart Display Options Toolbar" aria-controls="boxPlot"
+                style="max-width:500px;width:100%;">
+        <oj-bind-if test="[[chartType() != 'pie']]">
+        <oj-button on-oj-action="[[changeOrientationVertical]]">Vertical</oj-button>
+        <oj-button on-oj-action="[[changeOrientationHorizontal]]">Horizontal</oj-button>
+        <oj-button on-oj-action="[[changeOrientationStack]]">Stack</oj-button>
+        </oj-bind-if>
+        <oj-bind-if test="[[chartType() == 'pie']]"><oj-button on-oj-action="[[setThreeDPie]]">3D(Pie)</oj-button></oj-bind-if>
+    </oj-toolbar>
+    </div>
+    <div class="settings-div">
+        <h3>Series Attributes</h3>
+        <div class="oj-flex-item oj-lg-12 oj-xl-12">
+            <oj-label for="pattern">Series</oj-label>
+            <oj-select-one id="pattern" options="[[optionsDP]]" value="{{selectVal}}">
+            </oj-select-one>
+        </div>
+        <div class="oj-flex">
+            <div class="oj-flex-item oj-lg-12 oj-xl-12">
+                <oj-label for="color">color</oj-label>
+                <oj-input-text id="color" value="{{color}}"></oj-input-text>
+            </div>
+        </div>
+        <div class="oj-flex-item oj-lg-12 oj-xl-12">
+            <oj-label for="borderColor">borderColor</oj-label>
+            <oj-input-text id="borderColor" value="{{borderColor}}"></oj-input-text>
+        </div>
+    </div>
+</div>
+</oj-bind-if>
+
+<!-- Box Plot -->
+<oj-bind-if test="[[chartType() == 'boxPlot']]">
+<div id='chart-box-container' class="conatiner-display">
+    <div style="width:40%">
+    <oj-chart id="boxPlot"
+              type="boxPlot"
+              orientation="[[orientationValue]]"
+              data="[[dataProvider]]"
+              animation-on-display="auto"
+              animation-on-data-change="auto"
+              hover-behavior="dim"
+              style="max-width:500px;width:100%;height:350px;">
+        <template slot="itemTemplate" data-oj-as="item">
+            <oj-chart-item
+                    low="[[item.data.low]]"
+                    high="[[item.data.high]]"
+                    q1="[[item.data.q1]]"
+                    q2="[[item.data.q2]]"
+                    q3="[[item.data.q3]]"
+                    items="[[item.data.outliers]]"
+                    group-id="[[[item.data.group]]]" series-id="[[item.data.series]]">
+            </oj-chart-item>
+        </template>
+    </oj-chart>
+    <oj-toolbar id="myToolbar" aria-label="Chart Display Options Toolbar" aria-controls="boxPlot"
+                style="max-width:500px;width:100%;">
+        <oj-button on-oj-action="[[changeOrientationVertical]]">Vertical</oj-button>
+        <oj-button on-oj-action="[[changeOrientationHorizontal]]">Horizontal</oj-button>
+    </oj-toolbar>
+    </div>
+    <div class="settings-div">
+        <h3>Series Attributes</h3>
+        <div class="oj-flex-item oj-lg-12 oj-xl-12">
+            <oj-label for="pattern">Series</oj-label>
+            <oj-select-one id="pattern" options="[[optionsDP]]" value="{{selectVal}}">
+            </oj-select-one>
+        </div>
+        <div class="oj-flex">
+            <div class="oj-flex-item oj-lg-12 oj-xl-12">
+                <oj-label for="color">color</oj-label>
+                <oj-input-text id="color" value="{{color}}"></oj-input-text>
+            </div>
+        </div>
+        <div class="oj-flex-item oj-lg-12 oj-xl-12">
+            <oj-label for="borderColor">borderColor</oj-label>
+            <oj-input-text id="borderColor" value="{{borderColor}}"></oj-input-text>
+        </div>
+    </div>
+</div>
+</oj-bind-if>
+<!-- Scatter Plot -->
+<oj-bind-if test="[[chartType() == 'scatter']]">
+<div id='chart-scatter-container' class="conatiner-display">
+    <div style="width:40%">
+    <oj-chart
+            type="scatter"
+            selection-mode="multiple"
+            data="[[dataProvider]]"
+            animation-on-display="auto"
+            hover-behavior="dim"
+            style="max-width:500px;width:100%;height:350px;">
+
+        <template slot='itemTemplate' data-oj-as='item'>
+            <oj-chart-item
+                    x='[[item.data.x]]'
+                    y='[[item.data.y]]'
+                    group-id='[[ [item.data.group] ]]'
+                    series-id='[[item.data.series]]'>
+            </oj-chart-item>
+        </template>
+        <template slot='seriesTemplate' id="scatter-test" data-oj-as='series'>
+            <oj-chart-series
+                    color='[[ series.id == selectVal() ? color : null ]]'
+                    border-color='[[ series.id == selectVal() ? borderColor : null ]]'>
+            </oj-chart-series>
+        </template>
+    </oj-chart>
+    </div>
+    <div class="settings-div">
+        <h3>Series Attributes</h3>
+        <div class="oj-flex-item oj-lg-6 oj-xl-4">
+            <oj-label for="pattern">Series</oj-label>
+            <oj-select-one id="pattern" options="[[optionsDP]]" value="{{selectVal}}">
+            </oj-select-one>
+        </div>
+        <div class="oj-flex">
+            <div class="oj-flex-item oj-lg-6 oj-xl-4">
+                <oj-label for="color">color</oj-label>
+                <oj-input-text id="color" value="{{color}}"></oj-input-text>
+            </div>
+        </div>
+            <div class="oj-flex-item oj-lg-6 oj-xl-4">
+                <oj-label for="borderColor">borderColor</oj-label>
+                <oj-input-text id="borderColor" value="{{borderColor}}"></oj-input-text>
+            </div>
+        </div>
+    </div>
+</div>
+</oj-bind-if>
