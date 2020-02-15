@@ -103,6 +103,12 @@
                     group-id="[[[item.data.group]]]" series-id="[[item.data.series]]">
             </oj-chart-item>
         </template>
+        <template slot='seriesTemplate' id="boxplot-test" data-oj-as='series'>
+            <oj-chart-series
+                    color='[[ series.id == selectVal() ? color : null ]]'
+                    border-color='[[ series.id == selectVal() ? borderColor : null ]]'>
+            </oj-chart-series>
+        </template>
     </oj-chart>
     <oj-toolbar id="myToolbar" aria-label="Chart Display Options Toolbar" aria-controls="boxPlot"
                 style="max-width:500px;width:100%;">

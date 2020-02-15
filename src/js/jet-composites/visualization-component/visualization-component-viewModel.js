@@ -33,7 +33,20 @@ define(
             self.selectVal = ko.observable();
             self.optionsDP = new oj.ArrayDataProvider(self.series, { keyAttributes: 'value' });
 
-            function postData(type) {
+            function chartType(type){
+                switch (type) {
+                    case "area":
+                    case "bar":
+                    case "pie":
+                        return postData(type, "/bar-chart");
+                    case "boxPlot":
+                        return postData(type, "/plotbox-chart");
+                    default:
+                        return postData(type, "/scatter-chart");
+                }
+            }
+
+            function postData(type, url) {
                 self.chartType(type);
                 const myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");
@@ -45,7 +58,7 @@ define(
                     body: raw,
                 };
 
-                fetch("http://localhost:8080/execute/bar-chart", requestOptions)
+                fetch(`http://localhost:8080/execute${url}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         self.series([]);
@@ -61,8 +74,7 @@ define(
 
             self.submitDataClick = function(event, type)
             {
-
-                postData(type);
+                chartType(type);
             };
 
             // Method to change graph orientation
