@@ -6,7 +6,7 @@
 define(
     ['knockout', 'ojL10n!./resources/nls/visualization-component-strings', 'ojs/ojcontext', 'ojs/ojknockout',
         'ojs/ojformlayout', 'ojs/ojbutton', 'ojs/ojinputtext', 'ojs/ojchart', 'ojs/ojtoolbar', 'ojs/ojarraydataprovider',
-        'ojs/ojlabel', "ojs/ojselectcombobox", 'ojs/ojnavigationlist',  "ojs/ojoption"],
+        'ojs/ojlabel', "ojs/ojselectcombobox", 'ojs/ojnavigationlist',  "ojs/ojoption", , 'ojs/ojmodel'],
     function (ko, ArrayDataProvider, componentStrings, Context) {
         function ViewModel()
         {
@@ -33,116 +33,36 @@ define(
             self.selectVal = ko.observable();
             self.optionsDP = new oj.ArrayDataProvider(self.series, { keyAttributes: 'value' });
 
-
-            /*   ***** Get series array from input string ******    */
-            function getSeriesFromInput(dataString){
-                let dataSplit = dataString.split("\\t");
-                let values = [];
-                let series = [];
-
-                for (let i=0; i<dataSplit.length; i++){
-                    if (!dataSplit[i].includes("\\n")){
-                        series.push(dataSplit[i]);
-                    }else{
-                        const val = dataSplit[i].split("\\d")[0];
-                        val.split("\\n").forEach(element  =>  values.push(Number(element)));
-                    }
-                }
-                return {series, values};
-            }
-
-            /*      ***** Scatter Chart *****     */
-            function formatScatterChartData(series, values){
-                let data = [];
-                let k = 0;
-                let totalGroups = values.length / series.length;
-                while (k + 9 <values.length){
-                    for (let j=0; j<series.length; j++){
-                        data.push({
-                            id: k,
-                            series: series[j],
-                            group: "Group " + totalGroups,
-                            x: values[k++],
-                            y: values[k++],
-                            z: values[k++],
-                        });
-                    }
-                    totalGroups--;
-                }
-                return data;
-            }
-
-            /*   ***** Box Plot *****    */
-            function generateBoxPlotData(series, values){
-                let data = [];
-                let k = 0;
-                let totalGroups = Math.round(values.length / 7);
-                while (k<values.length){ // k+7 ?
-                    for (let j=0; j<series.length; j++){
-                            data.push({
-                                id: k,
-                                series: series[j],
-                                group: "Group " + (Math.round(totalGroups) - 1),
-                                low: values[k++],
-                                high: values[k++],
-                                z: values[k++],
-                                q1: values[k++],
-                                q2: values[k++],
-                                q3: values[k++],
-                                outliers: j === series.length -1 || values.length - k < 7 ? values.splice(k) : [values[k++]],
-                            });
-                    }
-                    totalGroups--;
-                }
-                return data;
-            }
-
-            /*   ***** Bar chart ******    */
-            function generateChartData(series, values){
-                let data = [];
-                let k = 0;
-                let totalGroups = Math.round(values.length / series.length);
-                while (k < values.length){
-                    for (let j=0; j<series.length; j++){
-                        data.push({
-                            id: k,
-                            series: series[j],
-                            group: "Group " + totalGroups,
-                            value: values[k] ? values[k] : 0 //Set undefined values to 0
-                        });
-                        k++;
-                    }
-                    totalGroups--;
-                }
-                return data;
-            }
-
-            function chartType(type, data){
+            function postData(type) {
                 self.chartType(type);
-                switch (type) {
-                    case "area":
-                    case "bar":
-                    case "pie":
-                        return generateChartData(data.series, data.values);
-                    case "boxPlot":
-                        return generateBoxPlotData(data.series, data.values);
-                    default:
-                        return formatScatterChartData(data.series, data.values);
-                }
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
+                const raw = JSON.stringify({code: self.dataSet()});
+                const requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                };
+
+                fetch("http://localhost:8080/execute/bar-chart", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        self.series([]);
+                        self.dataInput(result.data);
+                        result.series.map((element) => {
+                            self.series().push({
+                                value: element, label: element
+                            })
+                        });
+                    })
+                    .catch(error => console.error('error', error));
             }
 
             self.submitDataClick = function(event, type)
             {
-                const datax = getSeriesFromInput(self.dataSet());
-                self.series([]);
-                datax.series.map((element) => {
-                    self.series().push({
-                        value: element, label: element
-                    })
-                });
 
-                const returnedData = chartType(type, datax);
-                self.dataInput(returnedData);
+                postData(type);
             };
 
             // Method to change graph orientation
