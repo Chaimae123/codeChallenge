@@ -4,21 +4,23 @@
 -->
 <oj-form-layout id="form-container">
     <oj-input-text value="{{dataSet}}" type="text" on- placeholder="  Enter your data set here..." id="input-field"></oj-input-text>
-    <oj-button id="myButton1" on-oj-action="[[(event) => submitDataClick(event, 'bar')]]">
-        <span>Bar Chart</span>
-    </oj-button>
-    <oj-button id="myButton2" on-oj-action="[[(event) => submitDataClick(event, 'area')]]">
-        <span>Area Chart</span>
-    </oj-button>
-    <oj-button id="myButton3" on-oj-action="[[(event) => submitDataClick(event, 'pie')]]">
-        <span>Pie Chart</span>
-    </oj-button>
-    <oj-button id="myButton4" on-oj-action="[[(event) => submitDataClick(event, 'boxPlot')]]">
-        <span>Box Plot</span>
-    </oj-button>
-    <oj-button id="myButton5" on-oj-action="[[(event) => submitDataClick(event, 'scatter')]]">
-        <span>Scatter Plot</span>
-    </oj-button>
+    <div>
+        <oj-button id="myButton1" class="chart-type-button" on-oj-action="[[(event) => submitDataClick(event, 'bar')]]">
+            <span>Bar Chart</span>
+        </oj-button>
+        <oj-button id="myButton2" class="chart-type-button" on-oj-action="[[(event) => submitDataClick(event, 'area')]]">
+            <span>Area Chart</span>
+        </oj-button>
+        <oj-button id="myButton3" class="chart-type-button" on-oj-action="[[(event) => submitDataClick(event, 'pie')]]">
+            <span>Pie Chart</span>
+        </oj-button>
+        <oj-button id="myButton4" class="chart-type-button" on-oj-action="[[(event) => submitDataClick(event, 'boxPlot')]]">
+            <span>Box Plot</span>
+        </oj-button>
+        <oj-button id="myButton5" class="chart-type-button" on-oj-action="[[(event) => submitDataClick(event, 'scatter')]]">
+            <span>Scatter Plot</span>
+        </oj-button>
+    </div>
 </oj-form-layout>
 
 <!-- Bar/Area/Pie charts-->
@@ -52,11 +54,13 @@
     <oj-toolbar id="myToolbar" aria-label="Chart Display Options Toolbar" aria-controls="boxPlot"
                 style="max-width:500px;width:100%;">
         <oj-bind-if test="[[chartType() != 'pie']]">
-        <oj-button on-oj-action="[[changeOrientationVertical]]">Vertical</oj-button>
-        <oj-button on-oj-action="[[changeOrientationHorizontal]]">Horizontal</oj-button>
-        <oj-button on-oj-action="[[changeOrientationStack]]">Stack</oj-button>
+        <oj-button class="action-button" on-oj-action="[[changeOrientationVertical]]">Vertical</oj-button>
+        <oj-button class="action-button" on-oj-action="[[changeOrientationHorizontal]]">Horizontal</oj-button>
+        <oj-button class="action-button" on-oj-action="[[changeOrientationStack]]">Stack</oj-button>
+        <oj-button class="action-button" on-oj-action="[[changeOrientationUntack]]">Unstack</oj-button>
         </oj-bind-if>
-        <oj-bind-if test="[[chartType() == 'pie']]"><oj-button on-oj-action="[[setThreeDPie]]">3D(Pie)</oj-button></oj-bind-if>
+        <oj-bind-if test="[[chartType() == 'pie']]">
+            <oj-button class="action-button" on-oj-action="[[setThreeDPie]]">3D(Pie)</oj-button></oj-bind-if>
     </oj-toolbar>
     </div>
     <div class="settings-div">
@@ -112,8 +116,8 @@
     </oj-chart>
     <oj-toolbar id="myToolbar" aria-label="Chart Display Options Toolbar" aria-controls="boxPlot"
                 style="max-width:500px;width:100%;">
-        <oj-button on-oj-action="[[changeOrientationVertical]]">Vertical</oj-button>
-        <oj-button on-oj-action="[[changeOrientationHorizontal]]">Horizontal</oj-button>
+        <oj-button class="action-button" on-oj-action="[[changeOrientationVertical]]">Vertical</oj-button>
+        <oj-button class="action-button" on-oj-action="[[changeOrientationHorizontal]]">Horizontal</oj-button>
     </oj-toolbar>
     </div>
     <div class="settings-div">

@@ -22,10 +22,6 @@ define(
             self.dataInput = ko.observableArray();
             self.dataProvider = new oj.ArrayDataProvider(self.dataInput, {keyAttributes: 'id', implicitSort: [{attribute: 'value', direction: 'ascending'}]});
 
-            // let string = "Series 1\tSeries 2\tSeries 3\t91\n12\n35\n22\n71\n23\d"; // bar chart
-            // let string = "Series 1\tSeries 2\tSeries 3\t3\n28\n59\n8\n12\n17\n40\n3\n28\n59\n8\n12\n17\n40\n3\n28\n59\n8\n12\n17\n40\d"; // plot box & scatter chart
-
-
             // Chart settings
             self.color = ko.observable();
             self.borderColor = ko.observable();
@@ -48,6 +44,8 @@ define(
 
             function postData(type, url) {
                 self.chartType(type);
+                self.dataInput([]);
+                self.series([]);
                 const myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");
 
@@ -86,10 +84,14 @@ define(
             };
 
             self.changeOrientationStack = function(){
-                self.stackValue() === "off" ? self.stackValue("on") : self.stackValue("off");
+                self.stackValue("on");
+            };
+
+            self.changeOrientationUntack = function(){
+                self.stackValue("off");
             };
             self.setThreeDPie = function(){
-                self.threeDValue("on");
+                self.threeDValue() === "off" ? self.threeDValue("on") : self.threeDValue("off");
             }
         }
         return ViewModel;

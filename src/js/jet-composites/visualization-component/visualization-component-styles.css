@@ -18,8 +18,12 @@ visualization-component{
 	display: flex;
 }
 
+#form-container .oj-text-field{
+	max-width: 50vw !important;
+}
+
 #input-field{
-	width: 35vw;
+	width: 45vw !important;
 	border-radius: 4px;
 	border: 1px solid #9E9E9E;
 	margin-right: 10px;
@@ -46,4 +50,18 @@ visualization-component{
 
 .settings-div {
 	width: 30%;
+}
+
+.chart-type-button .oj-button-button{
+	border: none !important;
+	border-right: 1px solid #7073758c !important;
+	border-bottom: 1px solid #7073758c !important;
+	background-color: #f7f7f8 !important;
+	border-radius: unset !important;
+}
+
+.action-button{
+	background-color: #76b8e1;
+	border-radius: 4px;
+	min-width: 100px;
 }
