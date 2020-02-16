@@ -22,10 +22,6 @@ define(
             self.dataInput = ko.observableArray();
             self.dataProvider = new oj.ArrayDataProvider(self.dataInput, {keyAttributes: 'id', implicitSort: [{attribute: 'value', direction: 'ascending'}]});
 
-            // let string = "Series 1\tSeries 2\tSeries 3\t91\n12\n35\n22\n71\n23\d"; // bar chart
-            // let string = "Series 1\tSeries 2\tSeries 3\t3\n28\n59\n8\n12\n17\n40\n3\n28\n59\n8\n12\n17\n40\n3\n28\n59\n8\n12\n17\n40\d"; // plot box & scatter chart
-
-
             // Chart settings
             self.color = ko.observable();
             self.borderColor = ko.observable();
@@ -78,7 +74,8 @@ define(
                 let k = 0;
                 let totalGroups = Math.round(values.length / 7);
                 while (k<values.length){ // k+7 ?
-                    for (let j=0; j<series.length; j++){
+                    for (let j=0; j<series.length; j++) {
+                        if (k + 7 < values.length) {
                             data.push({
                                 id: k,
                                 series: series[j],
@@ -89,8 +86,9 @@ define(
                                 q1: values[k++],
                                 q2: values[k++],
                                 q3: values[k++],
-                                outliers: j === series.length -1 || values.length - k < 7 ? values.splice(k) : [values[k++]],
+                                outliers: j === series.length - 1 || values.length - k < 7 ? values.splice(k) : [values[k++]],
                             });
+                        }
                     }
                     totalGroups--;
                 }
@@ -103,14 +101,16 @@ define(
                 let k = 0;
                 let totalGroups = Math.round(values.length / series.length);
                 while (k < values.length){
-                    for (let j=0; j<series.length; j++){
-                        data.push({
-                            id: k,
-                            series: series[j],
-                            group: "Group " + totalGroups,
-                            value: values[k] ? values[k] : 0 //Set undefined values to 0
-                        });
-                        k++;
+                    for (let j=0; j<series.length; j++) {
+                        if (k < values.length && values.length !== null) {
+                            data.push({
+                                id: k,
+                                series: series[j],
+                                group: "Group " + totalGroups,
+                                value: values[k]
+                            });
+                            k++;
+                        }
                     }
                     totalGroups--;
                 }
@@ -154,10 +154,14 @@ define(
             };
 
             self.changeOrientationStack = function(){
-                self.stackValue() === "off" ? self.stackValue("on") : self.stackValue("off");
+                self.stackValue("on");
+            };
+
+            self.changeOrientationUntack = function(){
+                self.stackValue("off");
             };
             self.setThreeDPie = function(){
-                self.threeDValue("on");
+                self.threeDValue() === "off" ? self.threeDValue("on") : self.threeDValue("off");
             }
         }
         return ViewModel;
